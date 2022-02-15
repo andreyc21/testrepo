@@ -4,6 +4,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+    - uses: rlespinasse/github-slug-action@v4
     - name: Rancher Deploy
       uses: sekassel-research/actions-rancher-update@1.1.4
       with:
@@ -13,5 +15,5 @@ jobs:
         project_id: 1a862
         stack_name: newtest
         service_name: test
-        docker_image: ${{ steps.meta.outputs.tags }}
+        docker_image: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ env.GITHUB_REF_SLUG_URL }} 
 
