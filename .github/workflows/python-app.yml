@@ -38,3 +38,12 @@ jobs:
       run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
           docker push ghcr.io/andreyc21/test:latest
+    - name: Rancher Deploy
+      uses: giautm/rancher-deploy-action@v0.1.11
+      with:
+        rancherUrlApi: ${{ secrets.RANCHER_URL_API }}
+        rancherAccessKey: ${{ secrets.RANCHER_ACCESS_KEY}}
+        rancherSecretKey: ${{ secrets.RANCHER_SECRET_KEY }}
+        dockerImage: ${{ fromJSON(steps.docker-meta.outputs.json).tags[0] }}
+        serviceName: 'myProject'
+        namespaceId: '1a862'
