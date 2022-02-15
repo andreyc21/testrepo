@@ -63,4 +63,4 @@ jobs:
         project_id: 1a862
         stack_name: newtest
         service_name: test
-        docker_image: ${{ steps.meta.outputs.tags }}
+        docker_image: ${{ steps.meta.outputs.tags[0] }}
