@@ -2,6 +2,7 @@ name: Deploy
 on: [workflow_dispatch]
 jobs:
   deploy:
+    steps:
     - name: Rancher Deploy
       uses: sekassel-research/actions-rancher-update@1.1.4
       with:
