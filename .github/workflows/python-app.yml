@@ -60,6 +60,7 @@ jobs:
         rancherUrlApi: ${{ secrets.RANCHER_URL_API }}
         rancherAccessKey: ${{ secrets.RANCHER_ACCESS_KEY}}
         rancherSecretKey: ${{ secrets.RANCHER_SECRET_KEY }}
-        dockerImage: ${{ steps.meta.outputs.tags[0] }}
+        dockerImage: 'ghcr.io/andreyc21/testrepo:latest'
+        #dockerImage: ${{ steps.meta.outputs.tags }}
         serviceName: 'myProject'
         namespaceId: '1a862'
