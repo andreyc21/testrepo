@@ -38,7 +38,7 @@ jobs:
       uses: docker/metadata-action@v3
       with:
         images: ghcr.io/${{ github.repository }}
-        tags: latest
+        tags: latest, sha
 
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
@@ -53,14 +53,3 @@ jobs:
         context: .
         push: true
         tags: ${{ steps.meta.outputs.tags }}
-
-    - name: Rancher Deploy
-      uses: sekassel-research/actions-rancher-update@1.1.4
-      with:
-        rancher_url: ${{ secrets.RANCHER_URL_API }}
-        rancher_access: ${{ secrets.RANCHER_ACCESS_KEY}}
-        rancher_key: ${{ secrets.RANCHER_SECRET_KEY }}
-        project_id: 1a862
-        stack_name: newtest
-        service_name: test
-        docker_image: ${{ steps.meta.outputs.tags[0] }}
