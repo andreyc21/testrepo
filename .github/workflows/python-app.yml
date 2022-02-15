@@ -33,17 +33,26 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - run: docker build -t ghcr.io/andreyc21/test:latest .
-    - name: Push to github container registry
-      run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push ghcr.io/andreyc21/test:latest
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ghcr.io/${{ github.repository }}
+        tags: latest
+
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+
     - name: Rancher Deploy
       uses: giautm/rancher-deploy-action@v0.1.11
       with:
         rancherUrlApi: ${{ secrets.RANCHER_URL_API }}
         rancherAccessKey: ${{ secrets.RANCHER_ACCESS_KEY}}
         rancherSecretKey: ${{ secrets.RANCHER_SECRET_KEY }}
-        dockerImage: ${{ fromJSON(steps.docker-meta.outputs.json).tags[0] }}
+        dockerImage: ${{ steps.meta.outputs.tags[0] }}
         serviceName: 'myProject'
         namespaceId: '1a862'
