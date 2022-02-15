@@ -55,12 +55,12 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
 
     - name: Rancher Deploy
-      uses: giautm/rancher-deploy-action@v0.1.11
+      uses: sekassel-research/actions-rancher-update@1.1.4
       with:
-        rancherUrlApi: ${{ secrets.RANCHER_URL_API }}
-        rancherAccessKey: ${{ secrets.RANCHER_ACCESS_KEY}}
-        rancherSecretKey: ${{ secrets.RANCHER_SECRET_KEY }}
-        dockerImage: 'ghcr.io/andreyc21/testrepo:latest'
-        #dockerImage: ${{ steps.meta.outputs.tags }}
-        serviceName: 'myProject'
-        namespaceId: '1a862'
+        rancher_url: ${{ secrets.RANCHER_URL_API }}
+        rancher_access: ${{ secrets.RANCHER_ACCESS_KEY}}
+        rancher_key: ${{ secrets.RANCHER_SECRET_KEY }}
+        project_id: 1a862
+        stack_name: newtest
+        service_name: test
+        docker_image: ${{ steps.meta.outputs.tags }}
