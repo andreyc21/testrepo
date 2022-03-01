@@ -21,4 +21,5 @@ jobs:
         stack_name: newtest
         service_name: test
         docker_image: ghcr.io/${{ env.GITHUB_REPOSITORY_OWNER_PART_SLUG }}/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}:${{ env.GITHUB_REF_SLUG_URL }} 
-
+        retry: 1
+        timeout: 1
