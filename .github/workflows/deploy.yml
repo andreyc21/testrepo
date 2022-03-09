@@ -1,0 +1,50 @@
+name: Deploy
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["test"]
+    types:
+      - completed
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: rlespinasse/github-slug-action@v4
+    - name: test
+      run: |
+        echo "repository       : ${{ env.GITHUB_REPOSITORY_SLUG }}"
+        echo "repository owner : ${{ env.GITHUB_REPOSITORY_OWNER_PART_SLUG }}"
+        echo "repository name  : ${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}"
+    - name: Rancher Deploy
+      uses: andreyc21/actions-rancher-update@1.1.5
+      with:
+        rancher_url: ${{ secrets.RANCHER_URL_API }}
+        rancher_access: ${{ secrets.RANCHER_ACCESS_KEY}}
+        rancher_key: ${{ secrets.RANCHER_SECRET_KEY }}
+        project_id: 1a862
+        stack_name: newtest
+        service_name: test
+        docker_image: ghcr.io/${{ env.GITHUB_REPOSITORY_OWNER_PART_SLUG }}/${{ env.GITHUB_REPOSITORY_NAME_PART_SLUG }}:${{ env.GITHUB_REF_SLUG_URL }} 
+    - name: Send custom JSON data to Slack workflow
+      id: slack
+      uses: slackapi/slack-github-action@v1.18.0
+      with:
+        # For posting a rich message using Block Kit
+        payload: |
+          {
+            "text": "Push ${{ github.actor }} build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Push ${{ github.actor }} build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                }
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
