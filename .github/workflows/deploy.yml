@@ -5,6 +5,8 @@ on:
     workflows: ["Python application"]
     types:
       - completed
+    tags:
+      - v1.**
 jobs:
   deploy:
     runs-on: ubuntu-latest
