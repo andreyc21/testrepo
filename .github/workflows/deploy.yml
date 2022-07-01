@@ -10,6 +10,7 @@ on:
 jobs:
   deploy:
     if: startsWith(github.ref, 'refs/tags/v')
+    if: github.actor == "test1000s"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
